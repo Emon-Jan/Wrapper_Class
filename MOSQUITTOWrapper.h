@@ -11,6 +11,7 @@ private:
     int keepalive = 60;
     bool clean_session = true;
     const char *client_id = nullptr;
+    const char *topic = "test";
 
 public:
     struct mosquitto *mosq = nullptr;
@@ -30,7 +31,8 @@ public:
         int port,
         const char *client_id,
         int keepalive,
-        bool clean_session);
+        bool clean_session,
+        const char *topic);
     ~MOSQUITTOWrapper();
 };
 

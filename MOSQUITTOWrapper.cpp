@@ -14,7 +14,7 @@ MOSQUITTOWrapper::MOSQUITTOWrapper()
 {
     mosquitto_lib_init();
 
-    mosq = mosquitto_new(client_id, clean_session, nullptr);
+    mosq = mosquitto_new(client_id, clean_session, (void *)topic);
     if (!mosq)
     {
         fprintf(stderr, "Error: Out of memory.\n");
@@ -32,13 +32,15 @@ MOSQUITTOWrapper::MOSQUITTOWrapper(
     const char *host, int port,
     const char *client_id,
     int keepalive,
-    bool clean_session)
+    bool clean_session,
+    const char *topic)
     : host{host}, port{port}, client_id{client_id},
-      keepalive{keepalive}, clean_session{clean_session}
+      keepalive{keepalive}, clean_session{clean_session},
+      topic{topic}
 {
     mosquitto_lib_init();
 
-    mosq = mosquitto_new(client_id, clean_session, nullptr);
+    mosq = mosquitto_new(client_id, clean_session, (void *)topic);
     if (!mosq)
     {
         fprintf(stderr, "Error: Out of memory.\n");
@@ -84,7 +86,7 @@ void MOSQUITTOWrapper::on_connect(struct mosquitto *mosq, void *userdata, int re
     int i;
     if (!result)
     {
-        mosquitto_subscribe(mosq, NULL, "test", 1); // test is topic
+        mosquitto_subscribe(mosq, NULL, (const char *)userdata, 1); // test is topic
     }
     else
     {
